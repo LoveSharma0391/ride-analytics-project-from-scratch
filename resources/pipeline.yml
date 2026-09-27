@@ -1,0 +1,28 @@
+resources:
+  pipelines:
+    ride_analytics_pipeline:
+      name: "Ride Analytics — Pipeline"
+
+      continuous: true
+      catalog: ${var.catalog}
+      schema: realtime
+
+      root_path: ${workspace.file_path}
+
+      libraries:
+        - glob:
+            include: ${workspace.file_path}/transformations/**
+
+      configuration:
+        landing_volume_path: ${var.landing_volume_path}
+
+      channel: CURRENT
+
+      clusters:
+        - label: default
+          num_workers: 1
+          node_type_id: Standard_DS3_v2
+
+      tags:
+        project: ride-analytics
+        env:     ${bundle.target}
